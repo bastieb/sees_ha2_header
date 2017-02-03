@@ -32,3 +32,6 @@ random sache in aufgabe a optimieren, dass nur logische sachen rauskommen:
 - motor nur ausschalten wenn er angeschalten wurde
 - tempomat nicht im stehen anschalten
 
+Folgende Probleme habe ich bei Aufgabe 1 identifiziert:
+ - Bei einer Pedaländerung wird nie p_gas oder p_bremse erhöht. Es bleibt die ganze zeit bei 0. Ich habe auch schon getestet ob er überhaupt an die Stelle im code bei user.h springt und das tut er. Als ob ein anderer Prozess das sofort auf 0 setzt.
+

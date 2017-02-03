@@ -18,7 +18,8 @@ SC_MODULE(Engine){
 	//Prozesse
 	SC_CTOR(Engine){
 		SC_METHOD(start);
-		sensitive << m_throttle << S_on << S_off;		
+		sensitive << m_throttle << S_on << S_off;
+		cout << "Timestamp / throttle / v_current" << endl;		
 	}
 
 	//Funktionen

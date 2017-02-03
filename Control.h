@@ -43,12 +43,14 @@ SC_MODULE(Control){
 			S_on=1;
 
 			//Gas wurde gedrückt						
-			if(!p_bremse)//B! 
+			if(!p_bremse){
 				m_throttle = p_gas;
-
+				//if(p_gas)cout << "Gas ist " << p_gas << endl;
+			}
 			//Bremse wurde gedrückt
-			if(p_bremse){//B!
+			if(p_bremse){
 				m_throttle = -p_bremse; t=0; tempomatstatus=0;
+				//cout << "Bremse ist " << p_bremse << endl;
 			}
 
 			//Tempomat wurde angeschalten
