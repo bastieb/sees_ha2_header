@@ -1,0 +1,34 @@
+STANDARD_KOMMENTAR - cout << "[" << sc_time_stamp() << "](" << name() << "): read " << readNumber << endl;
+ 
+WAIT - wait(10, SC_MS) geht nur bei SC_THREAD
+
+CLOCK_INIT - sc_clock clock_sig("clock_sig", 10, SC_MS); //erstellen einer Uhr, gibt alle 10 ms ein Tick (positive Taktflanke)-Signal, dazwischen immer ein Tack (negative Taktflanke) 10, SC_MS
+CLOCK_WAIT - wait(clock.posedge_event()); //auf positive Taktflanke warten
+			//wait(clock.negedge_event()); //auf negative Taktflanke warten
+			//wait(clock.value_changed_event()); //auf nächste Taktflanke warten
+MEHR - siehe aufgabe b mit Thread
+
+KONSTRUKTOR - wenn im Konstruktor (SC_CTOR) sensitive unter SC_METHOD steht wird SC_METHOD immer aufgerufen wenn der sensitive ausgelöst wird
+BEISPIEL_ 
+SC_CTOR(Consumer){
+		SC_METHOD(consume);
+		sensitive << clock.pos(); //bei jeder positiven Uhrenflanke consume-Methode aufrufen.
+	}
+Wenn next_trigger(10, SC_MS); dort steht, dann wird gepollt (nur bei SC_METHOD)
+
+FIFO - im MAIN.C:
+	sc_fifo<int> data_fifo(3); //buffer size = 3, default is 16
+	im header:
+	initialisieren sc_fifo_out<int> data; beschreiben dann so: data.write(generatedNumber);
+	lesen wartet bis etwas im fifo drin steht: readNumber = data.read();
+fifo dürfen nur von einem process gelesen werden und auch nur von einem beschrieben
+
+SIGNAL - wie fifo nur nicht mehr zwei nötig
+
+
+TODO
+random sache in aufgabe a optimieren, dass nur logische sachen rauskommen: 
+- nicht hintereinander motor starten oder ausschalten
+- motor nur ausschalten wenn er angeschalten wurde
+- tempomat nicht im stehen anschalten
+
