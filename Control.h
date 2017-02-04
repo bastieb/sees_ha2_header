@@ -23,7 +23,7 @@ SC_MODULE(Control){
 	//Variablen
 	//int tempomatstatus;
 	double v_d;
-	int t;
+	int t, tempomatstatus_lok, throttle_lok;
 	static const int v_min = 0; // [m/s]
 	static const int v_max = 55; // [m/s]
 
@@ -38,58 +38,69 @@ SC_MODULE(Control){
 	//Prozess
 	void control_unit()
 	{ 
-		if(B_start){//B!
+		if(B_start.read()){//B!
 			//Motor wird gestartet
-			S_on=1;
+			S_on.write(1);
 
 			//Gas wurde gedrückt						
-			if(!p_bremse){
-				m_throttle = p_gas;
+			if(!p_bremse.read()){
+				m_throttle.write(p_gas.read());
 				//if(p_gas)cout << "Gas ist " << p_gas << endl;
 			}
 			//Bremse wurde gedrückt
-			if(p_bremse){
-				m_throttle = -p_bremse; t=0; tempomatstatus=0;
+			if(p_bremse.read()){
+				m_throttle.write(-p_bremse.read()); 
+				t=0; 
+				tempomatstatus_lok = 0;
+				tempomatstatus.write(tempomatstatus_lok);
 				//cout << "Bremse ist " << p_bremse << endl;
 			}
 
 			//Tempomat wurde angeschalten
-			if(B_set)//B!
-				tempomatstatus=1; 
-
+			if(B_set.read()){
+				tempomatstatus_lok = 1;
+				tempomatstatus.write(tempomatstatus_lok); 
+			}
 			//Tempomatmodus
-			if(tempomatstatus && !p_bremse){//B!
+			if(tempomatstatus_lok && !p_bremse.read()){
 					//v_d=v_current nur beim Anschalten
 					if(t == 0){
-						v_d=v_current;
+						v_d=v_current.read();
 						}
 					t=1;	
 					//v_d anpassen
-					if (B_vm && v_current > v_min && v_d >= v_min) v_d=v_d-1;
-					if (B_vp && v_current < v_max && v_d <= v_max) v_d=v_d+1;
+					if (B_vm.read() && v_current.read() > v_min && v_d >= v_min) v_d=v_d-1;
+					if (B_vp.read() && v_current.read() < v_max && v_d <= v_max) v_d=v_d+1;
 					
 					//Tempomat passt m_throttle an
-					if(!p_gas){
+					if(!p_gas.read()){
 						
 						//Tempomat normal 
-						if(!in_range)
-							m_throttle= controller(v_d, v_current);
+						if(!in_range.read())
+							m_throttle.write(controller(v_d, v_current.read()));
 //B! warum nicht else?						
 						//ACC, FrontCar gesichtet
-						if(in_range){
+						if(in_range.read()){
 							//ACC wenn v_d>v_acc (Vergleich double ist schlecht)
-							if(v_d > v_acc)
-								m_throttle=controller(v_acc, v_current);
+							if(v_d > v_acc.read())
+								throttle_lok = controller(v_acc.read(), v_current.read());
+								m_throttle.write(throttle_lok);
 							//Tempomat
-							if(v_d <= v_acc)
-								m_throttle= controller(v_d, v_current);
+							if(v_d <= v_acc.read())
+								throttle_lok = controller(v_d, v_current.read());
+								m_throttle.write(throttle_lok);
 						}	
 					}			
 					next_trigger(1,SC_SEC);	
 			}
 		}
-		else //B! bitte im Kommentar welches else es ist
-			{S_off=1,S_on=0, m_throttle=0, tempomatstatus=0, t = 0;}
+		else{
+			S_off.write(1);
+			S_on.write(0); 
+			m_throttle.write(0);
+			tempomatstatus_lok=0; 
+			tempomatstatus.write(tempomatstatus_lok); 
+			t = 0;}
 	}
 
 

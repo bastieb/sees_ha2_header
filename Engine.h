@@ -13,7 +13,7 @@ SC_MODULE(Engine){
 	sc_out<double> v_current;	
 
 	//Variablendeklaration
-	int j;//B! besserer Name für J, zb timer oder counter
+	int j, v_current_lok;//B! besserer Name für J, zb timer oder counter
 
 	//Prozesse
 	SC_CTOR(Engine){
@@ -25,11 +25,12 @@ SC_MODULE(Engine){
 	//Funktionen
 	void start()
 	{
-		if (S_on){
-			v_current = v_current + acceleration(m_throttle,v_current);
+		if (S_on.read()){
+			v_current_lok = v_current_lok + acceleration(m_throttle.read(),v_current_lok);
+			v_current.write(v_current_lok);
 			//Ausgabe nur alle 5 Sekunden
 			if(j==5){
-				cout << sc_time_stamp() << " / "<< int(m_throttle) << " / " << int(v_current) << " [m/s]" << endl;
+				cout << sc_time_stamp() << " / "<< int(m_throttle.read()) << " / " << int(v_current_lok) << " [m/s]" << endl;
 			j=0;
 			}
 			j++;	

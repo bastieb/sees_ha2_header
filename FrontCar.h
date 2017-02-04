@@ -23,7 +23,7 @@ SC_MODULE(FrontCar){
 	sc_in<double> v_current;
 
 	//Variablendeklaration
-	double sensor_range, action_range;
+	double sensor_range, action_range, dist_lok;
 	int i;
 
 	//Prozesse
@@ -41,23 +41,36 @@ SC_MODULE(FrontCar){
 		//Variablen
 		i=0;sensor_range=251.0;action_range=100.0;
 			
-		if(car_sighted==true || (dist<300 && tempomatstatus==1)){
+		if(car_sighted.read()==true || (dist_lok<300 && tempomatstatus.read()==1)){
 
-			v_acc=v_car;dist=dist+(v_car-v_current);
+			v_acc.write(v_car.read());
+			dist_lok = dist_lok + v_car.read() - v_current.read();
+			dist.write(dist_lok);
 
 			//Damit dist nur beim ersten betreten auf 250 gesetzt wird		
-			if (dist>300){dist=250;i=1;}
+			if (dist_lok > 300){
+				dist_lok=250;
+				dist.write(dist_lok);
+				i=1;
+			}
 			//Außerhalb der Reichweite, ACC wir nicht aktiviert
-			if (dist>action_range && dist <= sensor_range)in_range=false;				
-			//In der Reichweite, ACC wird aktiviert
-			if (dist<=action_range && dist>0){
-			in_range=true;	
+			if (dist_lok > action_range && dist_lok <= sensor_range){			
+				in_range.write(false);
+			}
+ 			//In der Reichweite, ACC wird aktiviert
+			if (dist_lok <= action_range && dist_lok > 0){
+				in_range.write(true);	
 			}
 			next_trigger(1,SC_SEC);
 		}
 		//muss noch eine bessere Loesung her, Variable i dient nur dazu, 		
 		//dass er beim ersten mal betreten nicht wieder dist auf 301 setzt	
-		if(dist>sensor_range && i==0){ dist=301, in_range=false; i=0;}	
+		if(dist_lok > sensor_range && i==0){ 
+			dist_lok=301; 
+			dist.write(dist_lok);
+			in_range.write(false); 
+			i=0;
+		}	
 	}
 };
 
