@@ -45,12 +45,12 @@ SC_MODULE(Control){
 			//Gas wurde gedrückt						
 			if(!p_bremse){
 				m_throttle = p_gas;
-				//if(p_gas)cout << "Gas ist " << p_gas << endl;
 			}
 			//Bremse wurde gedrückt
 			if(p_bremse){
-				m_throttle = -p_bremse; t=0; tempomatstatus=0;
-				//cout << "Bremse ist " << p_bremse << endl;
+				m_throttle = -p_bremse; 
+				t=0; 
+				tempomatstatus=0;
 			}
 
 			//Tempomat wurde angeschalten
@@ -88,8 +88,13 @@ SC_MODULE(Control){
 					next_trigger(1,SC_SEC);	
 			}
 		}
-		else //B! bitte im Kommentar welches else es ist
-			{S_off=1,S_on=0, m_throttle=0, tempomatstatus=0, t = 0;}
+		else{
+		 	S_off=1;
+			S_on=0; 
+			m_throttle=0;
+			tempomatstatus=0;
+			t = 0;
+		}
 	}
 
 

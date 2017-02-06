@@ -14,7 +14,7 @@ SC_MODULE(Engine){
 
 	//Variablendeklaration
 	int j;//B! besserer Name für J, zb timer oder counter
-
+	int v_old;
 	//Prozesse
 	SC_CTOR(Engine){
 		SC_METHOD(start);
@@ -27,11 +27,16 @@ SC_MODULE(Engine){
 	{
 		if (S_on){
 			v_current = v_current + acceleration(m_throttle,v_current);
-			//Ausgabe nur alle 5 Sekunden
-			if(j==5){
+			//Ausgabe alle 60 Sekunden
+			if(j==60){
 				cout << sc_time_stamp() << " / "<< int(m_throttle) << " / " << int(v_current) << " [m/s]" << endl;
 			j=0;
 			}
+			//Ausgabe wenn sich die Geschwindigkeit ändert
+			if(int(v_current) != v_old){
+				cout << sc_time_stamp() << " / "<< int(m_throttle) << " / " << int(v_current) << " [m/s]" << endl;
+			}
+			v_old = int(v_current.read());
 			j++;	
 			next_trigger(1,SC_SEC);}
 	}
