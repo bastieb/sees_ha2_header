@@ -49,7 +49,7 @@ SC_MODULE(FrontCar){
 			if(!first_sight_possible && dist > sensor_range){
 				first_sight_possible = true;
 				dist = 301;
-				cout << "Frontcar außerhalb des Ranges" << endl;
+				cout << "\033[31m" << "Frontcar außerhalb des Ranges" << "\033[0m" << endl;
 			}
 
 			if(car_sighted == true || (dist < sensor_range)){
@@ -66,7 +66,7 @@ SC_MODULE(FrontCar){
 				}				
 				//In der Reichweite, ACC wird aktiviert
 				if (dist <= action_range && dist > 0){
-					if(!in_range) cout << "ACC wird aktiviert" << endl;
+					if(!in_range) cout << "\033[31m" << "ACC wird aktiviert" << "\033[0m" << endl;
 					in_range = true;	
 				}
 				next_trigger(1,SC_SEC);
@@ -74,7 +74,7 @@ SC_MODULE(FrontCar){
 		
 			//Ausgabe		
 			if(abs(dist - dist_old) > 50){
-				cout << "Abstand Frontcar: " << int(dist) <<endl;
+				cout << "\033[31m" << "Abstand Frontcar: " << "\033[0m" << "\033[35m"<< int(dist) << "m\033[0m" << endl;
 				dist_old = int(dist);	
 			}
 		}else{//wenn der Tempomat aus ist

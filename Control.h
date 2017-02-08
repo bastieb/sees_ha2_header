@@ -50,12 +50,17 @@ SC_MODULE(Control){
 			if(p_bremse){
 				m_throttle = -p_bremse; 
 				t=0; 
-				tempomatstatus=0;
+				if(tempomatstatus == 1){
+					tempomatstatus = 0;
+					cout << "\033[34m" << "Tempomat " << "\033[7m" <<"AUS" << "\033[0m" << endl;
+				}
 			}
 
 			//Tempomat wurde angeschalten
-			if(B_set)//B!
-				tempomatstatus=1; 
+			if(B_set && tempomatstatus == 0){
+				tempomatstatus = 1; 
+				cout << "\033[34m" << "Tempomat " << "\033[7m" <<"AN" << "\033[0m" << endl;
+			}
 
 			//Tempomatmodus
 			if(tempomatstatus && !p_bremse){//B!
@@ -92,7 +97,10 @@ SC_MODULE(Control){
 		 	S_off=1;
 			S_on=0; 
 			m_throttle=0;
-			tempomatstatus=0;
+			if (tempomatstatus == 1){
+				tempomatstatus = 0;
+				cout << "\033[34m" << "Tempomat " << "\033[7m" <<"AUS" << "\033[0m" << endl;
+			}
 			t = 0;
 		}
 	}

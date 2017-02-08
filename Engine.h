@@ -19,7 +19,7 @@ SC_MODULE(Engine){
 	SC_CTOR(Engine){
 		SC_METHOD(start);
 		sensitive << m_throttle << S_on << S_off;
-		cout << "Timestamp / throttle / v_current" << endl;		
+		cout << "\033[32m\033[1m" << "Timestamp\tthrottle\tv_current" << "\033[0m" << endl;		
 	}
 
 	//Funktionen
@@ -29,12 +29,12 @@ SC_MODULE(Engine){
 			v_current = v_current + acceleration(m_throttle,v_current);
 			//Ausgabe alle 60 Sekunden
 			if(j==60){
-				cout << sc_time_stamp() << " / "<< int(m_throttle) << " / " << int(v_current) << " [m/s]" << endl;
+				cout << "\033[32m" << sc_time_stamp() << "\t\t"<< int(m_throttle) << "\t\t" << int(v_current) << " [m/s]" << "\033[0m" << endl;
 			j=0;
 			}
 			//Ausgabe wenn sich die Geschwindigkeit ändert
 			if(int(v_current) != v_old){
-				cout << sc_time_stamp() << " / "<< int(m_throttle) << " / " << int(v_current) << " [m/s]" << endl;
+				cout << "\033[32m" << sc_time_stamp() << "\t\t"<< int(m_throttle) << "\t\t" << int(v_current) << " [m/s]" << "\033[0m" << endl;
 			}
 			v_old = int(v_current.read());
 			j++;	
