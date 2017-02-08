@@ -74,7 +74,7 @@ SC_MODULE(FrontCar){
 		
 			//Ausgabe		
 			if(abs(dist - dist_old) > 50){
-				cout << "\033[31m" << "Abstand Frontcar: " << "\033[0m" << "\033[35m"<< int(dist) << "m\033[0m" << endl;
+				cout << "\033[31m" << "Abstand Frontcar: " << "\033[35m"<< int(dist) << "m\033[0m" << endl;
 				dist_old = int(dist);	
 			}
 		}else{//wenn der Tempomat aus ist
